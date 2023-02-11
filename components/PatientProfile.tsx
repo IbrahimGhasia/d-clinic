@@ -12,6 +12,7 @@ import {
 	IconBrandGoogleFit,
 	IconCake,
 	IconHome,
+	IconWallet,
 } from "@tabler/icons";
 
 const useStyles = createStyles((theme) => ({
@@ -30,6 +31,7 @@ const useStyles = createStyles((theme) => ({
 interface UserInfoIconsProps {
 	avatar: string;
 	name: string;
+	walletAddress: string;
 	age: number;
 	gender: string;
 	birthDay: string;
@@ -39,6 +41,7 @@ interface UserInfoIconsProps {
 export function PatientProfile({
 	avatar,
 	name,
+	walletAddress,
 	age,
 	gender,
 	birthDay,
@@ -53,10 +56,18 @@ export function PatientProfile({
 					<Title
 						sx={{ textTransform: "uppercase" }}
 						weight={700}
-						color="dimmed"
+						color="blue"
+						underline
 					>
 						{name}
 					</Title>
+
+					<Group noWrap spacing={10}>
+						<IconWallet stroke={1.5} size={20} className={classes.icon} />
+						<Text size="md" color="dimmed">
+							{walletAddress}
+						</Text>
+					</Group>
 
 					<Group noWrap spacing={10}>
 						<IconFriends stroke={1.5} size={20} className={classes.icon} />

@@ -5,6 +5,7 @@ import {
 	ColorSchemeProvider,
 	ColorScheme,
 } from "@mantine/core";
+import { NotificationsProvider } from "@mantine/notifications";
 
 import { useState } from "react";
 
@@ -14,6 +15,13 @@ import { configureChains, createClient, goerli, WagmiConfig } from "wagmi";
 import { polygon, polygonMumbai } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
+
+import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
+
+const client = new ApolloClient({
+	cache: new InMemoryCache(),
+	uri: "https://api.studio.thegraph.com/query/33627/d-clinic/v0.0.2",
+});
 
 const { chains, provider } = configureChains(
 	[polygonMumbai, polygon, goerli],
@@ -48,18 +56,22 @@ export default function App(props: AppProps) {
 			</Head>
 			<WagmiConfig client={wagmiClient}>
 				<RainbowKitProvider chains={chains}>
-					<ColorSchemeProvider
-						colorScheme={colorScheme}
-						toggleColorScheme={toggleColorScheme}
-					>
-						<MantineProvider
-							withGlobalStyles
-							withNormalizeCSS
-							theme={{ colorScheme }}
+					<ApolloProvider client={client}>
+						<ColorSchemeProvider
+							colorScheme={colorScheme}
+							toggleColorScheme={toggleColorScheme}
 						>
-							<Component {...pageProps} />
-						</MantineProvider>
-					</ColorSchemeProvider>
+							<MantineProvider
+								withGlobalStyles
+								withNormalizeCSS
+								theme={{ colorScheme }}
+							>
+								<NotificationsProvider>
+									<Component {...pageProps} />
+								</NotificationsProvider>
+							</MantineProvider>
+						</ColorSchemeProvider>
+					</ApolloProvider>
 				</RainbowKitProvider>
 			</WagmiConfig>
 		</>
