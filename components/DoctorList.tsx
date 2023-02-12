@@ -10,60 +10,150 @@ import {
 	Button,
 	Modal,
 	Textarea,
-	MultiSelect,
 	Title,
 	Divider,
 	Grid,
+	TextInput,
+	NumberInput,
 } from "@mantine/core";
 import { DatePicker, TimeInput } from "@mantine/dates";
 import dayjs from "dayjs";
 import { useState } from "react";
+import makeBlockie from "ethereum-blockies-base64";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import { IconX, IconCheck, IconLoader, IconCircleX } from "@tabler/icons";
+import { dClinicContractAddress, dClinicAbi } from "../constants";
+import { ethers } from "ethers";
+import { useAccount, useSigner } from "wagmi";
+import { useQuery } from "@apollo/client";
+// import getPatient from "graphQuery/getPatientQuery";
+import getPatient from "../graphQuery/getPatientQuery";
 
 interface UsersTableProps {
-	data: {
-		avatar: string;
+	data1: {
 		name: string;
-		job: string;
-		email: string;
-		phone: string;
+		specialization: string;
+		doctorAddress: string;
+		doctorId: string;
 	}[];
 }
 
-const jobColors: Record<string, string> = {
-	engineer: "blue",
-	manager: "cyan",
-	designer: "pink",
-};
-
-export function DoctorList({ data }: UsersTableProps) {
-	const pastMedHistory = [
-		{ value: "diabetes", label: "Diabetes" },
-		{ value: "leukemia", label: "Leukemia" },
-		{ value: "neumonia", label: "Neumonia" },
-		{ value: "seizures", label: "Seizures" },
-		{ value: "high blood pressure", label: "High Blood Pressure" },
-		{ value: "cataracts", label: "Cataracts" },
-		{ value: "anemia", label: "Anemia" },
-		{ value: "tubercolosis", label: "Tubercolosis" },
-		{ value: "high cholesterol", label: "High Cholesterol" },
-		{ value: "asthma", label: "Asthma" },
-		{ value: "kidney disease", label: "Kidney Disease" },
-		{ value: "jaundice", label: "Jaundice" },
-		{ value: "hiv/aids", label: "HIV/AIDS" },
-		{ value: "heart problems", label: "Heart Problems" },
-		{ value: "kidney stones", label: "Kidney Stones" },
-		{ value: "caner", label: "Cancer" },
-		{ value: "stomach ulcers", label: "Stomach Ulcers" },
-	];
+export function DoctorList({ data1 }: UsersTableProps) {
+	const { isConnected, address } = useAccount();
+	const { data: signer, isError, isLoading } = useSigner();
+	const { loading, error, data } = useQuery(getPatient(address));
 
 	const theme = useMantineTheme();
 	const [opened, setOpened] = useState(false);
-	const rows = data.map((item) => (
+	const [symptoms, setSymptoms] = useState("");
+	const [pastMedicalHistory, setPastMedicalHistory] = useState("");
+	const [appointmentDate, setAppointmentDate] = useState("");
+	const [appointmenTime, setAppointmenTime] = useState("");
+	const [doctorId, setDoctorId] = useState(0);
+
+	if (loading) {
+		return (
+			<>
+				<Group position="center" mt={"xl"}>
+					<IconLoader size={30} color={"orange"} />
+					<Text color={"orange"} size={"xl"}>
+						Loading ...
+					</Text>
+				</Group>
+			</>
+		);
+	}
+
+	if (data) {
+		if (data.patientCreateds.length === 0) {
+			return (
+				<>
+					<Group position="center" mt={"xl"}>
+						<IconCircleX size={30} color={"red"} />
+						<Text color={"red"} size={"xl"}>
+							Patient Profile Not Found! Create your profile first! Go to edit
+							profile page section.
+						</Text>
+					</Group>
+				</>
+			);
+		}
+	}
+
+	const patientId = data.patientCreateds[0].patientId;
+
+	const handleSubmit = async () => {
+		if (!isConnected) {
+			showNotification({
+				id: "hello",
+				autoClose: 5000,
+				title: "Connect Wallet",
+				message: "Please Connect your wallet to register",
+				color: "red",
+				icon: <IconX />,
+				className: "my-notification-class",
+				loading: false,
+			});
+			return;
+		}
+
+		showNotification({
+			id: "load-data",
+			loading: true,
+			title: "Posting...",
+			message:
+				"Please wait while we are posting your content to the blockchain",
+			autoClose: false,
+			disallowClose: true,
+		});
+		if (!signer) {
+			console.log("No signer found");
+			return;
+		}
+		const contractInstance = new ethers.Contract(
+			dClinicContractAddress,
+			dClinicAbi,
+			signer
+		);
+		const tx = await contractInstance.createAppointment(
+			patientId,
+			doctorId,
+			symptoms,
+			pastMedicalHistory,
+			appointmentDate,
+			appointmenTime
+		);
+		console.log(tx.hash);
+		console.log("-------------------------------------------");
+		const response = await tx.wait();
+		console.log("DONE!");
+		console.log("response");
+		console.log(response);
+		console.log("-------------------------------------------");
+
+		updateNotification({
+			id: "load-data",
+			color: "teal",
+			title: "Posted Successfully",
+			icon: <IconCheck size={16} />,
+			autoClose: 2000,
+			message: undefined,
+		});
+		setOpened(false);
+	};
+
+	const rows = data1.map((item) => (
 		<tr key={item.name}>
 			<td>
+				<Text size="md" weight={500} ml={"xl"}>
+					{item.doctorId}.
+				</Text>
+			</td>
+
+			<td>
 				<Group spacing="sm">
-					<Avatar size={30} src={item.avatar} radius={30} />
-					<Text size="sm" weight={500}>
+					<Avatar size={30} src={makeBlockie(item.doctorAddress)} radius={30} />
+					<Text size="md" weight={500}>
 						{item.name}
 					</Text>
 				</Group>
@@ -71,26 +161,25 @@ export function DoctorList({ data }: UsersTableProps) {
 
 			<td>
 				<Badge
-					color={jobColors[item.job.toLowerCase()]}
+					color={"yellow"}
 					variant={theme.colorScheme === "dark" ? "light" : "outline"}
+					size={"md"}
 				>
-					{item.job}
+					{item.specialization}
 				</Badge>
 			</td>
 			<td>
 				<Anchor<"a">
-					size="sm"
+					size="md"
 					href="#"
 					onClick={(event) => event.preventDefault()}
 				>
-					{item.email}
+					{item.doctorAddress.slice(0, 6) +
+						"..." +
+						item.doctorAddress.slice(-4)}
 				</Anchor>
 			</td>
-			<td>
-				<Text size="sm" color="dimmed">
-					{item.phone}
-				</Text>
-			</td>
+
 			<td>
 				<Modal
 					opened={opened}
@@ -114,6 +203,23 @@ export function DoctorList({ data }: UsersTableProps) {
 							<Title order={3}>Medical Information</Title>
 							<Divider size="sm" my={10} variant={"dashed"} />
 						</Grid.Col>
+
+						<Grid.Col>
+							<NumberInput
+								description="Enter the Doctor ID of your selected Doctor"
+								label="Doctor ID"
+								withAsterisk
+								radius="md"
+								size="md"
+								min={0}
+								onChange={(e) => {
+									if (!e) {
+										return;
+									}
+									setDoctorId(e);
+								}}
+							/>
+						</Grid.Col>
 						<Grid.Col>
 							<Textarea
 								minRows={3}
@@ -122,17 +228,26 @@ export function DoctorList({ data }: UsersTableProps) {
 								withAsterisk
 								radius="md"
 								size="md"
+								onChange={(e) => setSymptoms(e.currentTarget.value)}
 							/>
 						</Grid.Col>
 
 						<Grid.Col>
-							<MultiSelect
+							{/* <MultiSelect
 								data={pastMedHistory}
 								placeholder="Do you now or have you ever had any of the following?"
 								label="Past Medical History"
 								withAsterisk
 								radius="md"
 								size="md"
+							/> */}
+							<TextInput
+								placeholder="Do you now or have you ever had any diesese (i.e. Diabities etc) ? Mention them here"
+								label="Past Medical History"
+								withAsterisk
+								radius="md"
+								size="md"
+								onChange={(e) => setPastMedicalHistory(e.currentTarget.value)}
 							/>
 						</Grid.Col>
 
@@ -151,23 +266,32 @@ export function DoctorList({ data }: UsersTableProps) {
 								withAsterisk
 								radius="md"
 								size="md"
-								// onChange={(event) => {
-								// 	setDepature((event.value = new Date().toJSON().slice(0, 10)));
-								// }}
+								onChange={(event) => {
+									if (!event) {
+										return;
+									}
+									setAppointmentDate(event.toJSON().slice(0, 10));
+								}}
 							/>
 						</Grid.Col>
 
 						<Grid.Col span={6}>
 							<TimeInput
-								defaultValue={new Date()}
 								label="Appointment time"
 								radius="md"
 								size="md"
 								format="12"
-								amLabel="AM"
-								pmLabel="PM"
 								withAsterisk
 								clearable
+								onChange={(event) => {
+									if (!event) {
+										return;
+									}
+									const hrs = event.getHours();
+									const mins = event.getMinutes();
+									const time = `${hrs}:${mins}`;
+									setAppointmenTime(time);
+								}}
 							/>
 						</Grid.Col>
 						<Button
@@ -177,8 +301,13 @@ export function DoctorList({ data }: UsersTableProps) {
 							fullWidth
 							my={"lg"}
 							mx={150}
-							// disabled={form.isValid() ? false : true}
-							onClick={() => setOpened(false)}
+							disabled={
+								!symptoms ||
+								!pastMedicalHistory ||
+								!appointmentDate ||
+								!appointmenTime
+							}
+							onClick={handleSubmit}
 						>
 							SUBMIT
 						</Button>
@@ -194,11 +323,19 @@ export function DoctorList({ data }: UsersTableProps) {
 			<Table sx={{ minWidth: 800 }} verticalSpacing="sm">
 				<thead>
 					<tr>
-						<th>Doctor</th>
-						<th>Specialization</th>
-						<th>Email</th>
-						<th>Phone</th>
-						<th />
+						<th>
+							<Text size={"lg"}>Doctor Id</Text>
+						</th>
+						<th>
+							<Text size={"lg"}>Doctor Name</Text>
+						</th>
+						<th>
+							<Text size={"lg"}>Specialization</Text>
+						</th>
+						<th>
+							<Text size={"lg"}>Wallet Address</Text>
+						</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>{rows}</tbody>

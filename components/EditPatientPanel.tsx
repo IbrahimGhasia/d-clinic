@@ -10,32 +10,17 @@ import {
 	Textarea,
 	Button,
 	Text,
-	Tooltip,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { showNotification, updateNotification } from "@mantine/notifications";
 
-// import { useForm, zodResolver } from "@mantine/form";
 import { useState } from "react";
 import { ImageInput } from "./ImageInput";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import { useSigner } from "wagmi";
-import {
-	useContractRead,
-	useContractWrite,
-	usePrepareContractWrite,
-	useSignMessage,
-} from "wagmi";
 import { dClinicAbi, dClinicContractAddress } from "../constants";
 import { IconCheck, IconX } from "@tabler/icons";
-
-// import { z } from "zod";
-
-// const schema = z.object({
-// 	name: z.string().min(3, { message: "Name should have atleast 3 character" }),
-// 	age: z.number().min(1, { message: "Age should be greater than 0" }),
-// });
 
 export function EditPatientPanel() {
 	const { isConnected } = useAccount();

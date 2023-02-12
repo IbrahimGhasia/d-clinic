@@ -34,6 +34,7 @@
     "embla-carousel-react": "^7.0.8",
     "eslint": "8.32.0",
     "eslint-config-next": "13.1.4",
+    "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.7.2",
     "graphql": "^16.6.0",
     "next": "13.1.4",

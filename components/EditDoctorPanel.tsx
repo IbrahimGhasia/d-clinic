@@ -12,36 +12,105 @@ import {
 	Text,
 	Tooltip,
 } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
 import { useForm, zodResolver } from "@mantine/form";
 import { useState } from "react";
 import { ImageInput } from "./ImageInput";
 import { z } from "zod";
-import { IconAlertCircle } from "@tabler/icons";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import { IconX, IconCheck } from "@tabler/icons";
+import { dClinicContractAddress, dClinicAbi } from "../constants";
+import { ethers } from "ethers";
+import { useAccount, useSigner } from "wagmi";
 
-const schema = z.object({
-	name: z.string().min(3, { message: "Name should have atleast 3 character" }),
-	age: z.number().min(1, { message: "Age should be greater than 0" }),
-	gender: z.string().min(1, { message: "Enter your gender" }),
-	specialization: z.string().min(1, { message: "Enter your specializations" }),
-	per_address: z.string().min(3, { message: "Enter your permanent address" }),
-});
+// const schema = z.object({
+// 	name: z.string().min(3, { message: "Name should have atleast 3 character" }),
+// 	age: z.number().min(1, { message: "Age should be greater than 0" }),
+// 	gender: z.string().min(1, { message: "Enter your gender" }),
+// 	specialization: z.string().min(1, { message: "Enter your specializations" }),
+// 	per_address: z.string().min(3, { message: "Enter your permanent address" }),
+// });
 
 export function EditDoctorPanel() {
+	const { isConnected } = useAccount();
+	const { data: signer, isError, isLoading } = useSigner();
+
 	const [image, setImage] = useState<File>();
+	const [name, setName] = useState("");
+	const [age, setAge] = useState("");
+	const [gender, setGender] = useState("");
+	const [specialization, setSpecialization] = useState("");
+	const [perAddress, setPerAddress] = useState("");
 
-	const form = useForm({
-		initialValues: {
-			name: "",
-			age: 0,
-			gender: "",
-			specialization: "",
-			per_address: "",
-		},
+	// const form = useForm({
+	// 	initialValues: {
+	// 		name: "",
+	// 		age: 0,
+	// 		gender: "",
+	// 		specialization: "",
+	// 		per_address: "",
+	// 	},
 
-		validate: zodResolver(schema),
-		validateInputOnChange: true,
-	});
+	// 	validate: zodResolver(schema),
+	// 	validateInputOnChange: true,
+	// });
+
+	const handleSubmit = async () => {
+		if (!isConnected) {
+			showNotification({
+				id: "hello",
+				autoClose: 5000,
+				title: "Connect Wallet",
+				message: "Please Connect your wallet to register",
+				color: "red",
+				icon: <IconX />,
+				className: "my-notification-class",
+				loading: false,
+			});
+			return;
+		}
+
+		showNotification({
+			id: "load-data",
+			loading: true,
+			title: "Posting...",
+			message:
+				"Please wait while we are posting your content to the blockchain",
+			autoClose: false,
+			disallowClose: true,
+		});
+		if (!signer) {
+			console.log("No signer found");
+			return;
+		}
+		const contractInstance = new ethers.Contract(
+			dClinicContractAddress,
+			dClinicAbi,
+			signer
+		);
+		const tx = await contractInstance.createDoctor(
+			name,
+			age,
+			gender,
+			perAddress,
+			specialization
+		);
+		console.log(tx.hash);
+		console.log("-------------------------------------------");
+		const response = await tx.wait();
+		console.log("DONE!");
+		console.log("response");
+		console.log(response);
+		console.log("-------------------------------------------");
+
+		updateNotification({
+			id: "load-data",
+			color: "teal",
+			title: "Posted Successfully",
+			icon: <IconCheck size={16} />,
+			autoClose: 2000,
+			message: undefined,
+		});
+	};
 
 	return (
 		<>
@@ -79,7 +148,10 @@ export function EditDoctorPanel() {
 							radius="md"
 							size="md"
 							withAsterisk
-							{...form.getInputProps("name")}
+							// {...form.getInputProps("name")}
+							onChange={(e) => {
+								setName(e.target.value);
+							}}
 						/>
 					</Grid.Col>
 
@@ -91,7 +163,13 @@ export function EditDoctorPanel() {
 							size="md"
 							withAsterisk
 							min={0}
-							{...form.getInputProps("age")}
+							// {...form.getInputProps("age")}
+							onChange={(e) => {
+								if (!e) {
+									return;
+								}
+								setAge(e.toString());
+							}}
 						/>
 					</Grid.Col>
 
@@ -108,7 +186,13 @@ export function EditDoctorPanel() {
 							radius="md"
 							size="md"
 							withAsterisk
-							{...form.getInputProps("gender")}
+							// {...form.getInputProps("gender")}
+							onChange={(e) => {
+								if (!e) {
+									return;
+								}
+								setGender(e);
+							}}
 						/>
 					</Grid.Col>
 
@@ -119,7 +203,10 @@ export function EditDoctorPanel() {
 							radius="md"
 							size="md"
 							withAsterisk
-							{...form.getInputProps("specialization")}
+							// {...form.getInputProps("specialization")}
+							onChange={(e) => {
+								setSpecialization(e.target.value);
+							}}
 						/>
 					</Grid.Col>
 
@@ -130,7 +217,10 @@ export function EditDoctorPanel() {
 							label="Address"
 							placeholder="Enter your permanent Address"
 							withAsterisk
-							{...form.getInputProps("per_address")}
+							// {...form.getInputProps("per_address")}
+							onChange={(e) => {
+								setPerAddress(e.target.value);
+							}}
 						/>
 					</Grid.Col>
 
@@ -140,7 +230,14 @@ export function EditDoctorPanel() {
 							color={"green"}
 							size="md"
 							fullWidth
-							disabled={form.isValid() ? false : true}
+							disabled={
+								name.length === 0 ||
+								age.length === 0 ||
+								gender.length === 0 ||
+								specialization.length === 0 ||
+								perAddress.length === 0
+							}
+							onClick={handleSubmit}
 						>
 							SUBMIT
 						</Button>

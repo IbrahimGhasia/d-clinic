@@ -5,12 +5,11 @@ import { useAccount } from "wagmi";
 import { IconCircleX, IconLoader } from "@tabler/icons";
 
 import getPatient from "../graphQuery/getPatientQuery";
+import PatientAppoinment from "./PatientAppoinment";
 
 const PatientDashboard = () => {
 	const { address } = useAccount();
-
 	const { loading, error, data } = useQuery(getPatient(address));
-	console.log(data);
 
 	let p_name = "",
 		walletAddress = "",
@@ -59,17 +58,20 @@ const PatientDashboard = () => {
 		patientId = data.patientCreateds[0].patientId;
 
 		patientObject = (
-			<PatientProfile
-				avatar={
-					"https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80"
-				}
-				name={p_name}
-				walletAddress={walletAddress}
-				age={age}
-				gender={gender}
-				birthDay={dob}
-				address={perAddress}
-			/>
+			<>
+				<PatientProfile
+					avatar={
+						"https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80"
+					}
+					name={p_name}
+					walletAddress={walletAddress}
+					age={age}
+					gender={gender}
+					birthDay={dob}
+					address={perAddress}
+				/>
+				<PatientAppoinment patientId={patientId} />
+			</>
 		);
 	}
 
