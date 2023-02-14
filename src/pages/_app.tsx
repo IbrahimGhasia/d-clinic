@@ -20,7 +20,7 @@ import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 
 const client = new ApolloClient({
 	cache: new InMemoryCache(),
-	uri: "https://api.studio.thegraph.com/query/33627/d-clinic/v0.0.3",
+	uri: "https://api.studio.thegraph.com/query/33627/d-clinic/v0.0.4",
 });
 
 const { chains, provider } = configureChains(

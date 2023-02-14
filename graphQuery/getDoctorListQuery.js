@@ -12,6 +12,8 @@ const getDoctorList = () => {
 				gender
 				specialization
 				d_address
+				consultanceFee
+				duration
 			}
 		}
 	`;

@@ -6,6 +6,8 @@ const getAppointmentListForPatient = (patientId) => {
 			appointmentCreateds(where: { patientId: ${patientId} }) {
 				patientId
 				doctorId
+				patientAddress
+				doctorAddress
 				symptoms
 				pastMedHistory
 				appointmentDate

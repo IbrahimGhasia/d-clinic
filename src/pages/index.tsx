@@ -14,3 +14,5 @@ export default function Home() {
 		</>
 	);
 }
+
+// "DClinic": "0x5579CF7Ed2D48549Aa6285534Ce06bF61D3e0e24"

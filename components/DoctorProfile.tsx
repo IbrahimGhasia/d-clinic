@@ -5,6 +5,9 @@ import {
 	IconCake,
 	IconHome,
 	IconWallet,
+	IconSchool,
+	IconCurrencyEthereum,
+	IconAlarm,
 } from "@tabler/icons";
 
 const useStyles = createStyles((theme) => ({
@@ -25,18 +28,20 @@ interface UserInfoIconsProps {
 	name: string;
 	walletAddress: string;
 	age: number;
-	gender: string;
-	birthDay: string;
+	specialization: string;
+	fees: string;
+	duration: string;
 	address: string;
 }
 
-export function PatientProfile({
+export function DoctorProfile({
 	avatar,
 	name,
 	walletAddress,
 	age,
-	gender,
-	birthDay,
+	specialization,
+	fees,
+	duration,
 	address,
 }: UserInfoIconsProps) {
 	const { classes } = useStyles();
@@ -57,14 +62,14 @@ export function PatientProfile({
 					<Group noWrap spacing={10}>
 						<IconWallet stroke={1.5} size={20} className={classes.icon} />
 						<Text size="md" color="dimmed">
-							{walletAddress}
+							Wallet Address : {walletAddress}
 						</Text>
 					</Group>
 
 					<Group noWrap spacing={10}>
-						<IconFriends stroke={1.5} size={20} className={classes.icon} />
+						<IconSchool stroke={1.5} size={20} className={classes.icon} />
 						<Text size="md" color="dimmed">
-							{gender}
+							Specialization : {specialization}
 						</Text>
 					</Group>
 
@@ -75,21 +80,32 @@ export function PatientProfile({
 							className={classes.icon}
 						/>
 						<Text size="md" color="dimmed">
-							{age}
+							Age : {age}
 						</Text>
 					</Group>
 
 					<Group noWrap spacing={10}>
-						<IconCake stroke={1.5} size={20} className={classes.icon} />
+						<IconCurrencyEthereum
+							stroke={1.5}
+							size={20}
+							className={classes.icon}
+						/>
 						<Text size="md" color="dimmed">
-							{birthDay}
+							Consultance Fee : {fees}
+						</Text>
+					</Group>
+
+					<Group noWrap spacing={10}>
+						<IconAlarm stroke={1.5} size={20} className={classes.icon} />
+						<Text size="md" color="dimmed">
+							Money Stream Flow Rate : {duration}
 						</Text>
 					</Group>
 
 					<Group noWrap spacing={10}>
 						<IconHome stroke={1.5} size={20} className={classes.icon} />
 						<Text size="md" color="dimmed">
-							{address}
+							Doctor Address : {address}
 						</Text>
 					</Group>
 				</div>

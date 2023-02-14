@@ -26,7 +26,6 @@ import { dClinicContractAddress, dClinicAbi } from "../constants";
 import { ethers } from "ethers";
 import { useAccount, useSigner } from "wagmi";
 import { useQuery } from "@apollo/client";
-// import getPatient from "graphQuery/getPatientQuery";
 import getPatient from "../graphQuery/getPatientQuery";
 
 interface UsersTableProps {
@@ -35,12 +34,14 @@ interface UsersTableProps {
 		specialization: string;
 		doctorAddress: string;
 		doctorId: string;
+		consultanceFee: string;
+		duration: string;
 	}[];
 }
 
 export function DoctorList({ data1 }: UsersTableProps) {
 	const { isConnected, address } = useAccount();
-	const { data: signer, isError, isLoading } = useSigner();
+	const { data: signer } = useSigner();
 	const { loading, error, data } = useQuery(getPatient(address));
 
 	const theme = useMantineTheme();
@@ -50,6 +51,7 @@ export function DoctorList({ data1 }: UsersTableProps) {
 	const [appointmentDate, setAppointmentDate] = useState("");
 	const [appointmenTime, setAppointmenTime] = useState("");
 	const [doctorId, setDoctorId] = useState(0);
+	const [doctorWalletAddress, setDoctorWalletAddress] = useState("");
 
 	if (loading) {
 		return (
@@ -118,6 +120,7 @@ export function DoctorList({ data1 }: UsersTableProps) {
 		const tx = await contractInstance.createAppointment(
 			patientId,
 			doctorId,
+			doctorWalletAddress,
 			symptoms,
 			pastMedicalHistory,
 			appointmentDate,
@@ -144,43 +147,44 @@ export function DoctorList({ data1 }: UsersTableProps) {
 
 	const rows = data1.map((item) => (
 		<tr key={item.name}>
-			<td>
-				<Text size="md" weight={500} ml={"xl"}>
+			<td align="center">
+				<Text size="sm" weight={500}>
 					{item.doctorId}.
 				</Text>
 			</td>
 
-			<td>
+			<td align="center">
 				<Group spacing="sm">
-					<Avatar size={30} src={makeBlockie(item.doctorAddress)} radius={30} />
-					<Text size="md" weight={500}>
+					<Avatar size={20} src={makeBlockie(item.doctorAddress)} radius={30} />
+					<Text size="sm" weight={500}>
 						{item.name}
 					</Text>
 				</Group>
 			</td>
 
-			<td>
+			<td align="center">
 				<Badge
 					color={"yellow"}
 					variant={theme.colorScheme === "dark" ? "light" : "outline"}
-					size={"md"}
+					size={"sm"}
 				>
 					{item.specialization}
 				</Badge>
 			</td>
-			<td>
-				<Anchor<"a">
-					size="md"
-					href="#"
-					onClick={(event) => event.preventDefault()}
-				>
-					{item.doctorAddress.slice(0, 6) +
-						"..." +
-						item.doctorAddress.slice(-4)}
-				</Anchor>
+
+			<td align="center">
+				<Text size="sm" weight={500} ml={"xl"}>
+					{item.consultanceFee} / {item.duration}
+				</Text>
 			</td>
 
-			<td>
+			<td align="center">
+				<Text size="sm" weight={500} color={"blue"}>
+					{item.doctorAddress}
+				</Text>
+			</td>
+
+			<td align="center">
 				<Modal
 					opened={opened}
 					onClose={() => setOpened(false)}
@@ -204,7 +208,7 @@ export function DoctorList({ data1 }: UsersTableProps) {
 							<Divider size="sm" my={10} variant={"dashed"} />
 						</Grid.Col>
 
-						<Grid.Col>
+						<Grid.Col span={6}>
 							<NumberInput
 								description="Enter the Doctor ID of your selected Doctor"
 								label="Doctor ID"
@@ -220,6 +224,17 @@ export function DoctorList({ data1 }: UsersTableProps) {
 								}}
 							/>
 						</Grid.Col>
+
+						<Grid.Col span={6}>
+							<TextInput
+								description="Enter the Doctor Address of your selected Doctor"
+								label="Doctor Wallet Address"
+								withAsterisk
+								radius="md"
+								size="md"
+								onChange={(e) => setDoctorWalletAddress(e.currentTarget.value)}
+							/>
+						</Grid.Col>
 						<Grid.Col>
 							<Textarea
 								minRows={3}
@@ -233,14 +248,6 @@ export function DoctorList({ data1 }: UsersTableProps) {
 						</Grid.Col>
 
 						<Grid.Col>
-							{/* <MultiSelect
-								data={pastMedHistory}
-								placeholder="Do you now or have you ever had any of the following?"
-								label="Past Medical History"
-								withAsterisk
-								radius="md"
-								size="md"
-							/> */}
 							<TextInput
 								placeholder="Do you now or have you ever had any diesese (i.e. Diabities etc) ? Mention them here"
 								label="Past Medical History"
@@ -313,7 +320,14 @@ export function DoctorList({ data1 }: UsersTableProps) {
 						</Button>
 					</Grid>
 				</Modal>
-				<Button onClick={() => setOpened(true)}>Make Appointment</Button>
+				<Button
+					size="xs"
+					variant={"outline"}
+					color="lime"
+					onClick={() => setOpened(true)}
+				>
+					Make Appointment
+				</Button>
 			</td>
 		</tr>
 	));
@@ -324,16 +338,29 @@ export function DoctorList({ data1 }: UsersTableProps) {
 				<thead>
 					<tr>
 						<th>
-							<Text size={"lg"}>Doctor Id</Text>
+							<Text size={"sm"} align="center">
+								Doctor Id
+							</Text>
 						</th>
 						<th>
-							<Text size={"lg"}>Doctor Name</Text>
+							<Text size={"sm"} align="center">
+								Doctor Name
+							</Text>
 						</th>
 						<th>
-							<Text size={"lg"}>Specialization</Text>
+							<Text size={"sm"} align="center">
+								Specialization
+							</Text>
 						</th>
 						<th>
-							<Text size={"lg"}>Wallet Address</Text>
+							<Text size={"sm"} align="center">
+								Consultance Fee / Duration
+							</Text>
+						</th>
+						<th>
+							<Text size={"sm"} align="center">
+								Wallet Address
+							</Text>
 						</th>
 						<th></th>
 					</tr>

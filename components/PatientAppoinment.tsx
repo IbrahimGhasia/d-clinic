@@ -10,9 +10,11 @@ interface props {
 }
 
 const PatientAppoinment = ({ patientId }: props) => {
-	const { loading, error, data } = useQuery(
-		getAppointmentListForPatient(patientId)
-	);
+	const {
+		loading,
+		error,
+		data: appointmentData,
+	} = useQuery(getAppointmentListForPatient(patientId));
 
 	if (loading) {
 		return <p>Loading ... </p>;
@@ -20,7 +22,9 @@ const PatientAppoinment = ({ patientId }: props) => {
 
 	let appointments;
 
-	if (data.appointmentCreateds.length === 0) {
+	console.log(appointmentData.appointmentCreateds);
+
+	if (appointmentData.appointmentCreateds.length === 0) {
 		appointments = (
 			<>
 				<Text color={"lime"} size={"xl"} italic underline>
@@ -31,7 +35,7 @@ const PatientAppoinment = ({ patientId }: props) => {
 	} else {
 		appointments = (
 			<>
-				<AppointmentCard elements={data.appointmentCreateds} />
+				<AppointmentCard elements={appointmentData.appointmentCreateds} />
 			</>
 		);
 	}

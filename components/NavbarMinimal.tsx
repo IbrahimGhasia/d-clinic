@@ -19,6 +19,7 @@ import {
 	IconLogout,
 	IconSwitchHorizontal,
 } from "@tabler/icons";
+import Link from "next/link";
 
 const useStyles = createStyles((theme) => ({
 	link: {
@@ -80,25 +81,27 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 }
 
 const mockdata = [
-	{ icon: IconHome2, label: "Home" },
-	{ icon: IconGauge, label: "Dashboard" },
-	{ icon: IconDeviceDesktopAnalytics, label: "Analytics" },
-	{ icon: IconCalendarStats, label: "Releases" },
-	{ icon: IconUser, label: "Account" },
-	{ icon: IconFingerprint, label: "Security" },
-	{ icon: IconSettings, label: "Settings" },
+	{ icon: IconHome2, label: "Home", link: "/home" },
+	// { icon: IconGauge, label: "Dashboard" },
+	// { icon: IconDeviceDesktopAnalytics, label: "Analytics" },
+	// { icon: IconCalendarStats, label: "Releases" },
+	// { icon: IconUser, label: "Account" },
+	// { icon: IconFingerprint, label: "Security" },
+	// { icon: IconSettings, label: "Settings" },
 ];
 
 export function NavbarMinimal() {
 	const [active, setActive] = useState(2);
 
 	const links = mockdata.map((link, index) => (
-		<NavbarLink
-			{...link}
-			key={link.label}
-			active={index === active}
-			onClick={() => setActive(index)}
-		/>
+		<Link href={link.link} key={link.label}>
+			<NavbarLink
+				{...link}
+				key={link.label}
+				active={index === active}
+				onClick={() => setActive(index)}
+			/>
+		</Link>
 	));
 
 	return (

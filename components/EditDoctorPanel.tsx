@@ -12,23 +12,13 @@ import {
 	Text,
 	Tooltip,
 } from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
 import { useState } from "react";
 import { ImageInput } from "./ImageInput";
-import { z } from "zod";
 import { showNotification, updateNotification } from "@mantine/notifications";
-import { IconX, IconCheck } from "@tabler/icons";
+import { IconX, IconCheck, IconAlertCircle } from "@tabler/icons";
 import { dClinicContractAddress, dClinicAbi } from "../constants";
 import { ethers } from "ethers";
 import { useAccount, useSigner } from "wagmi";
-
-// const schema = z.object({
-// 	name: z.string().min(3, { message: "Name should have atleast 3 character" }),
-// 	age: z.number().min(1, { message: "Age should be greater than 0" }),
-// 	gender: z.string().min(1, { message: "Enter your gender" }),
-// 	specialization: z.string().min(1, { message: "Enter your specializations" }),
-// 	per_address: z.string().min(3, { message: "Enter your permanent address" }),
-// });
 
 export function EditDoctorPanel() {
 	const { isConnected } = useAccount();
@@ -40,19 +30,8 @@ export function EditDoctorPanel() {
 	const [gender, setGender] = useState("");
 	const [specialization, setSpecialization] = useState("");
 	const [perAddress, setPerAddress] = useState("");
-
-	// const form = useForm({
-	// 	initialValues: {
-	// 		name: "",
-	// 		age: 0,
-	// 		gender: "",
-	// 		specialization: "",
-	// 		per_address: "",
-	// 	},
-
-	// 	validate: zodResolver(schema),
-	// 	validateInputOnChange: true,
-	// });
+	const [consultationFee, setConsultationFee] = useState("");
+	const [duration, setDuration] = useState("");
 
 	const handleSubmit = async () => {
 		if (!isConnected) {
@@ -92,7 +71,9 @@ export function EditDoctorPanel() {
 			age,
 			gender,
 			perAddress,
-			specialization
+			specialization,
+			consultationFee,
+			duration
 		);
 		console.log(tx.hash);
 		console.log("-------------------------------------------");
@@ -148,7 +129,6 @@ export function EditDoctorPanel() {
 							radius="md"
 							size="md"
 							withAsterisk
-							// {...form.getInputProps("name")}
 							onChange={(e) => {
 								setName(e.target.value);
 							}}
@@ -163,7 +143,6 @@ export function EditDoctorPanel() {
 							size="md"
 							withAsterisk
 							min={0}
-							// {...form.getInputProps("age")}
 							onChange={(e) => {
 								if (!e) {
 									return;
@@ -186,7 +165,6 @@ export function EditDoctorPanel() {
 							radius="md"
 							size="md"
 							withAsterisk
-							// {...form.getInputProps("gender")}
 							onChange={(e) => {
 								if (!e) {
 									return;
@@ -203,7 +181,6 @@ export function EditDoctorPanel() {
 							radius="md"
 							size="md"
 							withAsterisk
-							// {...form.getInputProps("specialization")}
 							onChange={(e) => {
 								setSpecialization(e.target.value);
 							}}
@@ -217,9 +194,54 @@ export function EditDoctorPanel() {
 							label="Address"
 							placeholder="Enter your permanent Address"
 							withAsterisk
-							// {...form.getInputProps("per_address")}
 							onChange={(e) => {
 								setPerAddress(e.target.value);
+							}}
+						/>
+					</Grid.Col>
+
+					<Grid.Col span={6}>
+						<TextInput
+							label="Fee"
+							placeholder="Enter your consultation fee in ETH."
+							radius={"md"}
+							size={"md"}
+							withAsterisk
+							onChange={(e) => {
+								setConsultationFee(e.target.value);
+							}}
+						/>
+					</Grid.Col>
+
+					<Grid.Col span={6}>
+						<TextInput
+							label="Payment Duration"
+							placeholder="Enter your payment duration period in seconds"
+							radius={"md"}
+							size={"md"}
+							withAsterisk
+							rightSection={
+								<Tooltip
+									multiline
+									width={220}
+									label="Payment will be done using Superfluid Constant Flow Agreement. 
+									The Constant Flow Agreement lets you stream money! What do we mean by streaming? 
+									Streaming is a constant by-the-second movement of tokens from a sending account to a receiving account. 
+									In a CFA, the sender agrees to have its account balance reduce at a certain per-second rate—called the flow 
+									rate—and the receiving party's account balance increase at that flow rate."
+									position="top-end"
+									withArrow
+								>
+									<div>
+										<IconAlertCircle
+											size={18}
+											style={{ display: "block", opacity: 0.5 }}
+										/>
+									</div>
+								</Tooltip>
+							}
+							onChange={(e) => {
+								setDuration(e.target.value);
 							}}
 						/>
 					</Grid.Col>

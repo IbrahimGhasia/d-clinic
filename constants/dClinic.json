@@ -6,6 +6,8 @@
 		"inputs": [
 			{ "type": "uint256", "name": "patientId", "indexed": false },
 			{ "type": "uint256", "name": "doctorId", "indexed": false },
+			{ "type": "address", "name": "patientAddress", "indexed": false },
+			{ "type": "address", "name": "doctorAddress", "indexed": false },
 			{ "type": "string", "name": "symptoms", "indexed": false },
 			{ "type": "string", "name": "pastMedHistory", "indexed": false },
 			{ "type": "string", "name": "appointmentDate", "indexed": false },
@@ -23,7 +25,9 @@
 			{ "type": "string", "name": "age", "indexed": false },
 			{ "type": "string", "name": "gender", "indexed": false },
 			{ "type": "string", "name": "d_address", "indexed": false },
-			{ "type": "string", "name": "specialization", "indexed": false }
+			{ "type": "string", "name": "specialization", "indexed": false },
+			{ "type": "string", "name": "consultanceFee", "indexed": false },
+			{ "type": "string", "name": "duration", "indexed": false }
 		]
 	},
 	{
@@ -41,6 +45,31 @@
 		]
 	},
 	{
+		"type": "event",
+		"anonymous": false,
+		"name": "prescriptionAdded",
+		"inputs": [
+			{ "type": "uint256", "name": "patientId", "indexed": false },
+			{ "type": "uint256", "name": "doctorId", "indexed": false },
+			{ "type": "address", "name": "doctorAddress", "indexed": false },
+			{ "type": "address", "name": "patientAddress", "indexed": false },
+			{ "type": "string", "name": "prescriptions", "indexed": false }
+		]
+	},
+	{
+		"type": "function",
+		"name": "addPrescription",
+		"constant": false,
+		"payable": false,
+		"inputs": [
+			{ "type": "uint256", "name": "patientId" },
+			{ "type": "uint256", "name": "doctorId" },
+			{ "type": "address", "name": "patientAddress" },
+			{ "type": "string", "name": "prescriptions" }
+		],
+		"outputs": []
+	},
+	{
 		"type": "function",
 		"name": "createAppointment",
 		"constant": false,
@@ -48,6 +77,7 @@
 		"inputs": [
 			{ "type": "uint256", "name": "patientId" },
 			{ "type": "uint256", "name": "doctorId" },
+			{ "type": "address", "name": "doctorAddress" },
 			{ "type": "string", "name": "symptoms" },
 			{ "type": "string", "name": "pastMedHistory" },
 			{ "type": "string", "name": "appointmentDate" },
@@ -65,7 +95,9 @@
 			{ "type": "string", "name": "age" },
 			{ "type": "string", "name": "gender" },
 			{ "type": "string", "name": "d_address" },
-			{ "type": "string", "name": "specialization" }
+			{ "type": "string", "name": "specialization" },
+			{ "type": "string", "name": "consultanceFee" },
+			{ "type": "string", "name": "duration" }
 		],
 		"outputs": []
 	},

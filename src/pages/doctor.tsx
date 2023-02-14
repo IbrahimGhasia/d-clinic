@@ -4,6 +4,7 @@ import { Tabs } from "@mantine/core";
 import { IconUserCircle, IconEditCircle } from "@tabler/icons";
 import { EditPatientPanel } from "components/EditPatientPanel";
 import { EditDoctorPanel } from "components/EditDoctorPanel";
+import DoctorDashboardPanel from "components/DoctorDashboardPanel";
 
 const useStyles = createStyles((theme) => ({
 	titleColor: {
@@ -38,7 +39,7 @@ export default function Home() {
 					</Tabs.List>
 
 					<Tabs.Panel value="dashboard" pt="xs">
-						Gallery tab content
+						<DoctorDashboardPanel />
 					</Tabs.Panel>
 
 					<Tabs.Panel value="edit" pt="xs">

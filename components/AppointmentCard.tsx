@@ -1,5 +1,4 @@
 import { Group, Table, Text } from "@mantine/core";
-
 interface TableProps {
 	elements: {
 		doctorId: string;
@@ -7,6 +6,7 @@ interface TableProps {
 		pastMedHistory: string;
 		appointmentDate: string;
 		appointmentTime: string;
+		doctorAddress: string;
 	}[];
 }
 

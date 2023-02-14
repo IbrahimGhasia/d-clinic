@@ -4,7 +4,6 @@ const getDoctor = (address) => {
 	const GET_DOCTOR = gql`
 		{
 			doctorCreateds(
-				first: 5
 				where: { doctorAddress: "${address}" }
 			) {
 				id
@@ -15,6 +14,8 @@ const getDoctor = (address) => {
 				gender
 				specialization
 				d_address
+				consultanceFee
+				duration
 			}
 		}
 	`;

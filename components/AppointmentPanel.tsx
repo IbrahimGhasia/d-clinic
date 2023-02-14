@@ -4,26 +4,7 @@ import { DoctorList } from "./DoctorList";
 import { gql, useQuery } from "@apollo/client";
 
 import getDoctorList from "../graphQuery/getDoctorListQuery";
-import { IconLoader } from "@tabler/icons";
-
-const data2 = [
-	{
-		avatar:
-			"https://images.unsplash.com/photo-1624298357597-fd92dfbec01d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
-		name: "Robert Wolfkisser",
-		job: "Engineer",
-		email: "rob_wolf@gmail.com",
-		phone: "123-456-7890",
-	},
-	{
-		avatar:
-			"https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
-		name: "Jill Jailbreaker",
-		job: "Engineer",
-		email: "jj@breaker.com",
-		phone: "123-456-7890",
-	},
-];
+import { IconLoader, IconZoomExclamation } from "@tabler/icons";
 
 const AppointmentPanel = () => {
 	const { loading, error, data } = useQuery(getDoctorList());
@@ -40,14 +21,19 @@ const AppointmentPanel = () => {
 			</>
 		);
 	}
-	// data.doctorCreateds.map((doctor: any) => {
-	// 	console.log(doctor);
-	// });
 
-	// const [currentSymptoms, setCurrentSymptoms] = useState();
-	// const [pastMedHistory, setPastMedHistory] = useState([]);
-	// const [appointmentDate, setAppointmentDate] = useState(new Date());
-	// const [appointmentTime, setAppointmentTime] = useState();
+	if (error) {
+		return (
+			<>
+				<Group position="center" mt={"xl"}>
+					<IconZoomExclamation size={30} color={"red"} />
+					<Text color={"red"} size={"xl"}>
+						Opps, something went wrong! Try again ...
+					</Text>
+				</Group>
+			</>
+		);
+	}
 
 	return (
 		<>
