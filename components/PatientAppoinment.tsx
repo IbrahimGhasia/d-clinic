@@ -3,7 +3,7 @@ import { Title, Divider, Group, Text } from "@mantine/core";
 import { IconCircleX, IconStethoscope } from "@tabler/icons";
 import { useAccount } from "wagmi";
 import getAppointmentListForPatient from "../graphQuery/getAppointmentQuery";
-import AppointmentCard from "./AppointmentCard";
+import AppointmentCard from "./AppointmentCardPatient";
 
 interface props {
 	patientId: string;
@@ -21,8 +21,6 @@ const PatientAppoinment = ({ patientId }: props) => {
 	}
 
 	let appointments;
-
-	console.log(appointmentData.appointmentCreateds);
 
 	if (appointmentData.appointmentCreateds.length === 0) {
 		appointments = (

@@ -1,6 +1,7 @@
 import { useAccount } from "wagmi";
 import { useQuery } from "@apollo/client";
 import getDoctor from "../graphQuery/getDoctorQuery";
+
 import { Divider, Group, Paper, Text, Title } from "@mantine/core";
 import {
 	IconCircleX,
@@ -9,11 +10,11 @@ import {
 	IconZoomExclamation,
 } from "@tabler/icons";
 import { DoctorProfile } from "./DoctorProfile";
+import DoctorAppointmentList from "./DoctorAppointmentList";
 
 const DoctorDashboardPanel = () => {
 	const { address } = useAccount();
 	const { loading, error, data: doctorProfile } = useQuery(getDoctor(address));
-	console.log(doctorProfile);
 
 	let name = "",
 		doctorId = "",
@@ -99,9 +100,10 @@ const DoctorDashboardPanel = () => {
 	return (
 		<div>
 			<Paper shadow={"xl"} p={"xl"} radius={"xl"} withBorder={true} my={10}>
-				<Title>Patient Dashboard</Title>
+				<Title>Doctor Dashboard</Title>
 				<Divider size="sm" my={10} variant={"dashed"} />
 				{doctorObject}
+				<DoctorAppointmentList />
 			</Paper>
 		</div>
 	);
