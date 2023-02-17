@@ -12,9 +12,16 @@ import { useState } from "react";
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, goerli, WagmiConfig } from "wagmi";
-import { polygon, polygonMumbai } from "wagmi/chains";
-import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
+
+import {
+	HuddleClientProvider,
+	getHuddleClient,
+} from "@huddle01/huddle01-client";
+
+const huddleClient = getHuddleClient(
+	"9975d342827528d97e1fc5268d7ea7d49dd3ace6f2941f1506a797ba4847a1ed"
+);
 
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 
@@ -23,10 +30,7 @@ const client = new ApolloClient({
 	uri: "https://api.studio.thegraph.com/query/33627/d-clinic/v0.0.4",
 });
 
-const { chains, provider } = configureChains(
-	[polygonMumbai, polygon, goerli],
-	[publicProvider()]
-);
+const { chains, provider } = configureChains([goerli], [publicProvider()]);
 
 const { connectors } = getDefaultWallets({
 	appName: "d-Clinic",
@@ -57,20 +61,22 @@ export default function App(props: AppProps) {
 			<WagmiConfig client={wagmiClient}>
 				<RainbowKitProvider chains={chains}>
 					<ApolloProvider client={client}>
-						<ColorSchemeProvider
-							colorScheme={colorScheme}
-							toggleColorScheme={toggleColorScheme}
-						>
-							<MantineProvider
-								withGlobalStyles
-								withNormalizeCSS
-								theme={{ colorScheme }}
+						<HuddleClientProvider client={huddleClient}>
+							<ColorSchemeProvider
+								colorScheme={colorScheme}
+								toggleColorScheme={toggleColorScheme}
 							>
-								<NotificationsProvider>
-									<Component {...pageProps} />
-								</NotificationsProvider>
-							</MantineProvider>
-						</ColorSchemeProvider>
+								<MantineProvider
+									withGlobalStyles
+									withNormalizeCSS
+									theme={{ colorScheme }}
+								>
+									<NotificationsProvider>
+										<Component {...pageProps} />
+									</NotificationsProvider>
+								</MantineProvider>
+							</ColorSchemeProvider>
+						</HuddleClientProvider>
 					</ApolloProvider>
 				</RainbowKitProvider>
 			</WagmiConfig>

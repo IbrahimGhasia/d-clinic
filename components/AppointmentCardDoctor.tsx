@@ -1,4 +1,5 @@
 import {
+	Button,
 	Divider,
 	Group,
 	Modal,
@@ -10,7 +11,9 @@ import {
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import getPatient from "graphQuery/getPatientQuery";
-import { IconInfoSquare, IconUserCircle } from "@tabler/icons";
+import { IconBrandZoom, IconInfoSquare, IconUserCircle } from "@tabler/icons";
+import Link from "next/link";
+import HuddleMeeting from "./HuddleMeeting";
 
 interface TableProps {
 	elements: {
@@ -102,6 +105,13 @@ const AppointmentCardDoctor = ({ elements }: TableProps) => {
 					<IconInfoSquare />
 				</UnstyledButton>
 			</td>
+			<td align="center">
+				<Link href="/meetRoom">
+					<UnstyledButton>
+						<IconBrandZoom />
+					</UnstyledButton>
+				</Link>
+			</td>
 		</tr>
 	));
 
@@ -126,6 +136,9 @@ const AppointmentCardDoctor = ({ elements }: TableProps) => {
 					</th>
 					<th>
 						<Text align="center">Patient Info</Text>
+					</th>
+					<th>
+						<Text align="center">Create Meeting</Text>
 					</th>
 				</tr>
 			</thead>

@@ -12,7 +12,10 @@ import {
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import getDoctor from "graphQuery/getDoctorQuery";
-import { IconInfoSquare, IconStethoscope } from "@tabler/icons";
+import { IconBrandZoom, IconInfoSquare, IconStethoscope } from "@tabler/icons";
+import useSuperfluid from "../hooks/useSuperFluid";
+import { useAccount, useProvider, useSigner } from "wagmi";
+import Link from "next/link";
 
 interface TableProps {
 	elements: {
@@ -29,6 +32,30 @@ interface TableProps {
 const AppointmentCardPatient = ({ elements }: TableProps) => {
 	const [opened, setOpened] = useState(false);
 	const [d_address, setD_address] = useState("");
+
+	const { sendPlanedStream } = useSuperfluid();
+	const { data: signer } = useSigner();
+	const provider = useProvider();
+	const { address } = useAccount();
+
+	const sendStream = async () => {
+		await sendPlanedStream(
+			provider,
+			signer,
+			address,
+			"0xB287A419Da76167C1d5D154A7FF947cF2e17E46A",
+			3600,
+			0.001
+		);
+	};
+
+	// sendStream();
+
+	// const joinMeeting = async (doctorAddress: string) => {
+	// 	await huddleClient.join(doctorAddress, {
+	// 		address: address,
+	// 	});
+	// };
 
 	let doctor_name = "",
 		doctor_perAddress = "",
@@ -105,6 +132,13 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 					<IconInfoSquare />
 				</UnstyledButton>
 			</td>
+			<td align="center">
+				<Link href="/meetRoom">
+					<UnstyledButton>
+						<IconBrandZoom />
+					</UnstyledButton>
+				</Link>
+			</td>
 		</tr>
 	));
 
@@ -129,6 +163,9 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 					</th>
 					<th>
 						<Text align="center">Doctor Info</Text>
+					</th>
+					<th>
+						<Text align="center">Join the Meeting</Text>
 					</th>
 				</tr>
 			</thead>
