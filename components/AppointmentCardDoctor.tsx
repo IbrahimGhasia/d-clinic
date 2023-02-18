@@ -13,7 +13,8 @@ import { useQuery } from "@apollo/client";
 import getPatient from "graphQuery/getPatientQuery";
 import { IconBrandZoom, IconInfoSquare, IconUserCircle } from "@tabler/icons";
 import Link from "next/link";
-import HuddleMeeting from "./HuddleMeeting";
+import { Chat } from "@pushprotocol/uiweb";
+import { useAccount } from "wagmi";
 
 interface TableProps {
 	elements: {
@@ -30,6 +31,8 @@ interface TableProps {
 const AppointmentCardDoctor = ({ elements }: TableProps) => {
 	const [opened, setOpened] = useState(false);
 	const [p_address, setP_address] = useState("");
+
+	const { address } = useAccount();
 
 	let patient_name = "",
 		patient_walletAddress = "",
@@ -94,6 +97,17 @@ const AppointmentCardDoctor = ({ elements }: TableProps) => {
 						<span style={{ color: "red" }}>Date Of Birth : </span>
 						{dob}
 					</Text>
+
+					<div>
+						{!address ? null : (
+							<Chat
+								account={address} //user address
+								supportAddress={patient_walletAddress} //support address
+								apiKey="jVPMCRom1B.iDRMswdehJG7NpHDiECIHwYMMv6k2KzkPJscFIDyW8TtSnk4blYnGa8DIkfuacU0"
+								env="staging"
+							/>
+						)}
+					</div>
 				</Modal>
 
 				<UnstyledButton

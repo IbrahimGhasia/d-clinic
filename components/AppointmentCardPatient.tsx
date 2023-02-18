@@ -1,6 +1,5 @@
 import {
 	Badge,
-	Button,
 	Divider,
 	Group,
 	Modal,
@@ -12,10 +11,19 @@ import {
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import getDoctor from "graphQuery/getDoctorQuery";
-import { IconBrandZoom, IconInfoSquare, IconStethoscope } from "@tabler/icons";
+import {
+	IconBrandZoom,
+	IconCheck,
+	IconCircleX,
+	IconInfoSquare,
+	IconMoneybag,
+	IconStethoscope,
+} from "@tabler/icons";
 import useSuperfluid from "../hooks/useSuperFluid";
 import { useAccount, useProvider, useSigner } from "wagmi";
 import Link from "next/link";
+import { Chat } from "@pushprotocol/uiweb";
+import { showNotification, updateNotification } from "@mantine/notifications";
 
 interface TableProps {
 	elements: {
@@ -38,25 +46,6 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 	const provider = useProvider();
 	const { address } = useAccount();
 
-	const sendStream = async () => {
-		await sendPlanedStream(
-			provider,
-			signer,
-			address,
-			"0xB287A419Da76167C1d5D154A7FF947cF2e17E46A",
-			3600,
-			0.001
-		);
-	};
-
-	// sendStream();
-
-	// const joinMeeting = async (doctorAddress: string) => {
-	// 	await huddleClient.join(doctorAddress, {
-	// 		address: address,
-	// 	});
-	// };
-
 	let doctor_name = "",
 		doctor_perAddress = "",
 		walletAddress = "",
@@ -68,7 +57,6 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 
 	const { data: doctor_details } = useQuery(getDoctor(d_address));
 	if (doctor_details && d_address.length !== 0) {
-		console.log(doctor_details);
 		doctor_name = doctor_details.doctorCreateds[0].name;
 		doctor_perAddress = doctor_details.doctorCreateds[0].d_address;
 		walletAddress = doctor_details.doctorCreateds[0].doctorAddress;
@@ -78,6 +66,49 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 		duration = doctor_details.doctorCreateds[0].duration;
 		specialization = doctor_details.doctorCreateds[0].specialization;
 	}
+
+	const sendStream = async (
+		doctorAddress: string,
+		duration: Number,
+		totalTokens: Number
+	) => {
+		try {
+			showNotification({
+				id: "load-data",
+				loading: true,
+				title: "Posting...",
+				message: "Please wait, stream is being created for the doctor's wallet",
+				autoClose: false,
+				disallowClose: true,
+			});
+			await sendPlanedStream(
+				provider,
+				signer,
+				address,
+				doctorAddress,
+				duration,
+				totalTokens
+			);
+			updateNotification({
+				id: "load-data",
+				color: "teal",
+				title: "Stream Created",
+				icon: <IconCheck size={16} />,
+				autoClose: 10000,
+				message:
+					"Stream has been created for the doctor's wallet. You can check it on https://console.superfluid.finance/goerli",
+			});
+		} catch (error) {
+			showNotification({
+				id: "load-data",
+				color: "red",
+				title: "Oops! Something went wrong",
+				message: "Please try again later",
+				icon: <IconCircleX size={16} />,
+				autoClose: 5000,
+			});
+		}
+	};
 
 	const rows = elements.map((element) => (
 		<tr key={element.doctorId}>
@@ -121,6 +152,17 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 						</span>
 						{consultanceFee} ETH / {duration} sec.
 					</Text>
+
+					<div>
+						{!address ? null : (
+							<Chat
+								account={address} //user address
+								supportAddress={walletAddress} //support address
+								apiKey="jVPMCRom1B.iDRMswdehJG7NpHDiECIHwYMMv6k2KzkPJscFIDyW8TtSnk4blYnGa8DIkfuacU0"
+								env="staging"
+							/>
+						)}
+					</div>
 				</Modal>
 
 				<UnstyledButton
@@ -138,6 +180,19 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 						<IconBrandZoom />
 					</UnstyledButton>
 				</Link>
+			</td>
+			<td align="center">
+				<UnstyledButton>
+					<IconMoneybag
+						onClick={() =>
+							sendStream(
+								walletAddress,
+								Number(duration),
+								Number(consultanceFee)
+							)
+						}
+					/>
+				</UnstyledButton>
 			</td>
 		</tr>
 	));
@@ -166,6 +221,9 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 					</th>
 					<th>
 						<Text align="center">Join the Meeting</Text>
+					</th>
+					<th>
+						<Text align="center">Pay Fees</Text>
 					</th>
 				</tr>
 			</thead>

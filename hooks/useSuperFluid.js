@@ -24,37 +24,28 @@ const useSuperFluid = () => {
 			const EthXContract = await sf.loadSuperToken("ETHx");
 			const ETHx = EthXContract.address;
 
-			let res = await EthXContract.getFlow({
+			const superSigner = sf.createSigner({ signer: signer });
+
+			const flowRate = ((totalTokens * 10 ** 18) / (duration * 3600)).toFixed(
+				0
+			);
+
+			let factor = (duration * 3600).toFixed(0);
+
+			console.log("flowRate", flowRate);
+
+			const createFlowOp = EthXContract.createFlow({
 				sender: senderAddress,
 				receiver: recieverAddress,
-				providerOrSigner: provider,
+				duration: factor,
+				flowRate,
 			});
 
-			// const signer_ = sf.createSigner({
-			// 	privateKey:
-			// 		"542a3a2711f27f11148b8c097f235278b8f2ebff4d7e5078995b4db8a9a25f56",
-			// 	provider: provider,
-			// });
+			const txnResponse = await createFlowOp.exec(superSigner);
+			const txnReceipt = await txnResponse.wait();
 
-			// const createFlowOp = EthXContract.createFlow({
-			// 	sender: senderAddress,
-			// 	receiver: recieverAddress,
-			// 	flowRate: "1000000000000000000",
-			// });
-
-			// const txnResponse = await createFlowOp.exec(signer_);
-			// const txnReceipt = await txnResponse.wait();
-
-			// let flowOp = EthXContract.createFlow({
-			// 	sender: senderAddress,
-			// 	receiver: recieverAddress,
-			// 	flowRate: "1000000000000000000",
-			// });
-
-			// console.log(signer._address);
-
-			// await flowOp.exec(signer);
-			// await createFlowOp.exec(signer);
+			console.log("txnReceipt", txnResponse);
+			console.log("txnReceipt", txnReceipt);
 		} catch (error) {
 			console.log(
 				"Hmmm, your transaction threw an error. Make sure  that you've entered a valid Ethereum address!"

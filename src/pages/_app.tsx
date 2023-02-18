@@ -11,7 +11,13 @@ import { useState } from "react";
 
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { configureChains, createClient, goerli, WagmiConfig } from "wagmi";
+import {
+	configureChains,
+	createClient,
+	goerli,
+	mainnet,
+	WagmiConfig,
+} from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 
 import {
@@ -30,7 +36,10 @@ const client = new ApolloClient({
 	uri: "https://api.studio.thegraph.com/query/33627/d-clinic/v0.0.4",
 });
 
-const { chains, provider } = configureChains([goerli], [publicProvider()]);
+const { chains, provider } = configureChains(
+	[goerli, mainnet],
+	[publicProvider()]
+);
 
 const { connectors } = getDefaultWallets({
 	appName: "d-Clinic",

@@ -5,7 +5,6 @@ interface HuddleMeetingProps {
 }
 
 const HuddleMeeting = (doctorAddress: HuddleMeetingProps) => {
-	console.log("doctorId: ", doctorAddress.doctorAddress);
 	const iframeConfig: IframeConfig = {
 		roomUrl: `https://iframe.huddle01.com/${doctorAddress.doctorAddress}`,
 		height: "700px",
