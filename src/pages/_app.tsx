@@ -70,7 +70,7 @@ export default function App(props: AppProps) {
 			<WagmiConfig client={wagmiClient}>
 				<RainbowKitProvider chains={chains}>
 					<ApolloProvider client={client}>
-						<HuddleClientProvider client={huddleClient}>
+						<HuddleClientProvider value={huddleClient}>
 							<ColorSchemeProvider
 								colorScheme={colorScheme}
 								toggleColorScheme={toggleColorScheme}
