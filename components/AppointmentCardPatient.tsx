@@ -175,7 +175,7 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 				</UnstyledButton>
 			</td>
 			<td align="center">
-				<Link href="/meetRoom">
+				<Link href={`/https://iframe.huddle01.com/${walletAddress}`}>
 					<UnstyledButton>
 						<IconBrandZoom />
 					</UnstyledButton>

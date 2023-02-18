@@ -61,7 +61,7 @@ const DoctorDashboardPanel = () => {
 					<Group position="center" mt={"xl"}>
 						<IconCircleX size={30} color={"red"} />
 						<Text color={"red"} size={"xl"}>
-							Patient Profile Not Found! Create your profile first! Go to edit
+							Doctor Profile Not Found! Create your profile first! Go to edit
 							profile page section.
 						</Text>
 					</Group>

@@ -216,7 +216,7 @@ export function EditDoctorPanel() {
 					<Grid.Col span={6}>
 						<TextInput
 							label="Payment Duration"
-							placeholder="Enter your payment duration period in seconds"
+							placeholder="Enter your payment duration period (in hours)"
 							radius={"md"}
 							size={"md"}
 							withAsterisk
