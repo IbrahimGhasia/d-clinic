@@ -23,14 +23,14 @@ const mockdata = [
 	{
 		title: "Sign In as Doctor",
 		description:
-			"This dust is actually a powerful poison that will even make a pro wrestler sick, Regice cloaks itself with frigid air of -328 degrees Fahrenheit",
+			"Connect with your patients and manage your clinic with ease. Get started with d-Clinic today.",
 		icon: IconStethoscope,
 		link: "/doctor",
 	},
 	{
 		title: "Sign In as Patient",
 		description:
-			"People say it can run at the same speed as lightning striking, Its icy body is so cold, it will not melt even if it is immersed in magma",
+			"Connect with your doctors and manage your health with ease. Get started with d-Clinic today.",
 		icon: IconUser,
 		link: "/patient",
 	},
@@ -109,15 +109,15 @@ export function FeatureCards() {
 		<Container size="lg" py="xl" mt={80}>
 			<Group position="center">
 				<Badge variant="filled" size="lg">
-					Best company ever
+					Decentralized Clinic
 				</Badge>
 			</Group>
 
 			<Title order={2} className={classes.title} align="center" mt="sm">
-				Integrate effortlessly with any technology stack
+				Welcome to d-Clinic
 			</Title>
 
-			<Text
+			{/* <Text
 				color="dimmed"
 				className={classes.description}
 				align="center"
@@ -125,7 +125,7 @@ export function FeatureCards() {
 			>
 				Every once in a while, you’ll see a Golbat that’s missing some fangs.
 				This happens when hunger drives it to try biting a Steel-type Pokémon.
-			</Text>
+			</Text> */}
 
 			<SimpleGrid
 				cols={2}

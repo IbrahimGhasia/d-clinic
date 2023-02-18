@@ -26,7 +26,7 @@ const useSuperFluid = () => {
 
 			const superSigner = sf.createSigner({ signer: signer });
 
-			const flowRate = ((totalTokens * 10 ** 18) / (duration * 3600)).toFixed(
+			const flowRate_ = ((totalTokens * 10 ** 18) / (duration * 3600)).toFixed(
 				0
 			);
 
@@ -37,8 +37,9 @@ const useSuperFluid = () => {
 			const createFlowOp = EthXContract.createFlow({
 				sender: senderAddress,
 				receiver: recieverAddress,
-				duration: factor,
-				flowRate,
+				flowRate: flowRate_,
+				// duration: factor,
+				// flowRate,
 			});
 
 			const txnResponse = await createFlowOp.exec(superSigner);

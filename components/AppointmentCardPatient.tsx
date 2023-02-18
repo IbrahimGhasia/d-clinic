@@ -1,5 +1,6 @@
 import {
 	Badge,
+	Button,
 	Divider,
 	Group,
 	Modal,
@@ -11,6 +12,8 @@ import {
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import getDoctor from "graphQuery/getDoctorQuery";
+import getPrescriptionByDoctorId from "../graphQuery/getPrescriptionByDoctorIdQuery";
+
 import {
 	IconBrandZoom,
 	IconCheck,
@@ -47,6 +50,7 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 	const { address } = useAccount();
 
 	let doctor_name = "",
+		doctorId = "",
 		doctor_perAddress = "",
 		walletAddress = "",
 		gender = "",
@@ -58,6 +62,7 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 	const { data: doctor_details } = useQuery(getDoctor(d_address));
 	if (doctor_details && d_address.length !== 0) {
 		doctor_name = doctor_details.doctorCreateds[0].name;
+		doctorId = doctor_details.doctorCreateds[0].doctorId;
 		doctor_perAddress = doctor_details.doctorCreateds[0].d_address;
 		walletAddress = doctor_details.doctorCreateds[0].doctorAddress;
 		gender = doctor_details.doctorCreateds[0].gender;
@@ -65,6 +70,22 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 		consultanceFee = doctor_details.doctorCreateds[0].consultanceFee;
 		duration = doctor_details.doctorCreateds[0].duration;
 		specialization = doctor_details.doctorCreateds[0].specialization;
+	}
+
+	// const { data: prescription_details } = useQuery(getPrescription(address));
+	const { data: prescription_details, loading: prescription_loading } =
+		useQuery(getPrescriptionByDoctorId(address, doctorId));
+	let prescription = "";
+
+	if (prescription_loading) {
+		return;
+	}
+
+	if (
+		prescription_details &&
+		prescription_details.prescriptionAddeds.length !== 0
+	) {
+		prescription = prescription_details.prescriptionAddeds[0].prescriptions;
 	}
 
 	const sendStream = async (
@@ -150,8 +171,50 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 						<span style={{ color: "red" }}>
 							Flow rate charge (Consultance Fee / Duration) :{" "}
 						</span>
-						{consultanceFee} ETH / {duration} sec.
+						{consultanceFee} ETH / {duration} hour.
 					</Text>
+					<Divider size="sm" my={10} variant={"dashed"} />
+					<Text fw={500}>
+						<span style={{ color: "red" }}>Prescription : </span>
+						{prescription.length === 0
+							? "No prescription given."
+							: prescription}
+					</Text>
+
+					<Group position="apart" mt={30}>
+						<div>
+							<Button
+								leftIcon={<IconMoneybag size={18} />}
+								color="blue"
+								variant="outline"
+								size="md"
+								onClick={() =>
+									sendStream(
+										walletAddress,
+										Number(duration),
+										Number(consultanceFee)
+									)
+								}
+							>
+								Pay Consultance Fee
+							</Button>
+						</div>
+						<div>
+							<Link
+								href={`https://iframe.huddle01.com/${walletAddress}`}
+								target="_blank"
+							>
+								<Button
+									leftIcon={<IconBrandZoom size={18} />}
+									color="blue"
+									variant="outline"
+									size="md"
+								>
+									Join Meeting
+								</Button>
+							</Link>
+						</div>
+					</Group>
 
 					<div>
 						{!address ? null : (
@@ -172,26 +235,6 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 					}}
 				>
 					<IconInfoSquare />
-				</UnstyledButton>
-			</td>
-			<td align="center">
-				<Link href={`/https://iframe.huddle01.com/${walletAddress}`}>
-					<UnstyledButton>
-						<IconBrandZoom />
-					</UnstyledButton>
-				</Link>
-			</td>
-			<td align="center">
-				<UnstyledButton>
-					<IconMoneybag
-						onClick={() =>
-							sendStream(
-								walletAddress,
-								Number(duration),
-								Number(consultanceFee)
-							)
-						}
-					/>
 				</UnstyledButton>
 			</td>
 		</tr>
@@ -218,12 +261,6 @@ const AppointmentCardPatient = ({ elements }: TableProps) => {
 					</th>
 					<th>
 						<Text align="center">Doctor Info</Text>
-					</th>
-					<th>
-						<Text align="center">Join the Meeting</Text>
-					</th>
-					<th>
-						<Text align="center">Pay Fees</Text>
 					</th>
 				</tr>
 			</thead>

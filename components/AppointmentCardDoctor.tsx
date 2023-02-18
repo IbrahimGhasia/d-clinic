@@ -5,12 +5,15 @@ import {
 	Modal,
 	Table,
 	Text,
+	Textarea,
 	Title,
 	UnstyledButton,
 } from "@mantine/core";
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import getPatient from "graphQuery/getPatientQuery";
+import getPrescription from "../graphQuery/getPrescriptionQuery";
+
 import { IconBrandZoom, IconInfoSquare, IconUserCircle } from "@tabler/icons";
 import Link from "next/link";
 import { Chat } from "@pushprotocol/uiweb";
@@ -50,6 +53,18 @@ const AppointmentCardDoctor = ({ elements }: TableProps) => {
 		age = patient_details.patientCreateds[0].age;
 		gender = patient_details.patientCreateds[0].gender;
 		dob = patient_details.patientCreateds[0].dob;
+	}
+
+	const { data: prescription_details, loading: prescription_loading } =
+		useQuery(getPrescription(p_address));
+
+	if (prescription_loading) {
+		return;
+	}
+	let prescription = "";
+
+	if (prescription_details && p_address.length !== 0) {
+		prescription = prescription_details.prescriptionAddeds[0].prescriptions;
 	}
 
 	const rows = elements.map((element) => (
@@ -97,6 +112,28 @@ const AppointmentCardDoctor = ({ elements }: TableProps) => {
 						<span style={{ color: "red" }}>Date Of Birth : </span>
 						{dob}
 					</Text>
+					<Divider size="sm" my={10} variant={"dashed"} />
+					<Text fw={500}>
+						<span style={{ color: "red" }}>Prescription : </span>
+						{prescription.length === 0
+							? "No prescription given."
+							: prescription}
+					</Text>
+
+					<Group position="apart" mt={30}>
+						<div>
+							<Link href="/meetRoom">
+								<Button
+									leftIcon={<IconBrandZoom size={18} />}
+									color="blue"
+									variant="outline"
+									size="md"
+								>
+									Create Meeting
+								</Button>
+							</Link>
+						</div>
+					</Group>
 
 					<div>
 						{!address ? null : (
@@ -118,13 +155,6 @@ const AppointmentCardDoctor = ({ elements }: TableProps) => {
 				>
 					<IconInfoSquare />
 				</UnstyledButton>
-			</td>
-			<td align="center">
-				<Link href="/meetRoom">
-					<UnstyledButton>
-						<IconBrandZoom />
-					</UnstyledButton>
-				</Link>
 			</td>
 		</tr>
 	));
@@ -150,9 +180,6 @@ const AppointmentCardDoctor = ({ elements }: TableProps) => {
 					</th>
 					<th>
 						<Text align="center">Patient Info</Text>
-					</th>
-					<th>
-						<Text align="center">Create Meeting</Text>
 					</th>
 				</tr>
 			</thead>

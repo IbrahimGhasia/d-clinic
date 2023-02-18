@@ -8,6 +8,7 @@ import {
 	IconSchool,
 	IconCurrencyEthereum,
 	IconAlarm,
+	IconIdBadge,
 } from "@tabler/icons";
 
 const useStyles = createStyles((theme) => ({
@@ -26,6 +27,7 @@ const useStyles = createStyles((theme) => ({
 interface UserInfoIconsProps {
 	avatar: string;
 	name: string;
+	doctorId: string;
 	walletAddress: string;
 	age: number;
 	specialization: string;
@@ -37,6 +39,7 @@ interface UserInfoIconsProps {
 export function DoctorProfile({
 	avatar,
 	name,
+	doctorId,
 	walletAddress,
 	age,
 	specialization,
@@ -58,6 +61,13 @@ export function DoctorProfile({
 					>
 						{name}
 					</Title>
+
+					<Group noWrap spacing={10}>
+						<IconIdBadge stroke={1.5} size={20} className={classes.icon} />
+						<Text size="md" color="dimmed">
+							ID : {doctorId}
+						</Text>
+					</Group>
 
 					<Group noWrap spacing={10}>
 						<IconWallet stroke={1.5} size={20} className={classes.icon} />

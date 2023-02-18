@@ -77,22 +77,23 @@ export function Hero() {
 		<div className={classes.wrapper}>
 			<Container size={700} className={classes.inner}>
 				<h1 className={classes.title}>
-					A{" "}
+					{" "}
 					<Text
 						component="span"
 						variant="gradient"
 						gradient={{ from: "blue", to: "cyan" }}
 						inherit
 					>
-						fully featured
+						d-Clinic
 					</Text>{" "}
-					React components and hooks library
+					- A Decentralized Healthcare Platform
 				</h1>
 
 				<Text className={classes.description} color="dimmed">
-					Build fully functional accessible web applications with ease – Mantine
-					includes more than 100 customizable components and hooks to cover you
-					in any situation
+					d-Clinic is a decentralised platform that enables online decentralised
+					meetings and transactions between patients and doctors. It offers a
+					secure and transparent platform for healthcare professionals to
+					communicate with their patients.
 				</Text>
 
 				<Group className={classes.controls}>
