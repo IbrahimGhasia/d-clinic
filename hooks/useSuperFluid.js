@@ -19,7 +19,7 @@ const useSuperFluid = () => {
 				chainId: 5,
 			});
 
-			await wrapEther(provider, signer, totalTokens);
+			// await wrapEther(provider, signer, totalTokens);
 
 			const EthXContract = await sf.loadSuperToken("ETHx");
 			const ETHx = EthXContract.address;
@@ -32,14 +32,14 @@ const useSuperFluid = () => {
 
 			let factor = (duration * 3600).toFixed(0);
 
-			console.log("flowRate", flowRate);
+			console.log("flowRate", flowRate_);
 
 			const createFlowOp = EthXContract.createFlow({
 				sender: senderAddress,
 				receiver: recieverAddress,
 				flowRate: flowRate_,
 				// duration: factor,
-				// flowRate,
+				// flowRate_,
 			});
 
 			const txnResponse = await createFlowOp.exec(superSigner);
