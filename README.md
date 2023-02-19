@@ -1,38 +1,53 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# d-Clinic
 
-## Getting Started
+<a href="/">Demo Video</a>
 
-First, run the development server:
+Our application is hosted on this below link:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+- <a href="/">Vercel Link</a>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Authors
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- <a href="https://github.com/IbrahimGhasia">Ibrahim Ghasia</a>
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Description
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- d-Clinic (Decentralized Clinic) is a decentralised platform that enables online decentralised meetings and transactions between patients and doctors. It offers a secure and transparent platform for healthcare professionals to communicate with their patients, providing them with the necessary tools to ensure quality care. It offers a secure and convenient way to access medical care without having to travel or leave the comfort of one’s home.
 
-## Learn More
+- Are you a patient struggling to pay for costly medical bills? d-Clinic provides an innovative solution that allows you to pay for medical bills through Superfluid - Constant Flow Agreements (CFA). We help you streamline your payments and make it easier to manage your finances.
 
-To learn more about Next.js, take a look at the following resources:
+### <a href="https://goerli.etherscan.io/address/0x02d22FdE6321090DF8d0cDac76DF4870BFeb6107#code">Smart Contract Link</a>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+<br>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+# Technologies Used
 
-## Deploy on Vercel
+## The Graph
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- All the patients, doctors and appointments data is stored using <a href="https://thegraph.com/studio/subgraph/d-clinic/"> d-clinic </a> subgraph.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+  - The code snippets that are using Valist are located here
+  - <a href="">The Graph</a>
+
+## Superfluid
+
+- The patient has to pay the doctors consultance fee by streaming their ERC-20 (Goerli Testnet) tokens using Constant Flow Agreement of Superfluid. Each doctor will mention their flowrate.
+
+  - The code snippets that are using Valist are located here
+  - <a href="">Superfluid</a>
+
+## Push Protocol
+
+- The doctor and patient can chat with each other using push.
+
+  - The code snippets that are using Valist are located here
+  - <a href="">Push Protocol</a>
+
+## Livepeer
+
+- The online meeting with patients and doctors is implemented using Huddle01 which is built on top of Livepeer.
+
+  - The code snippets that are using Valist are located here
+  - <a href="">Livepeer (Huddle01)</a>

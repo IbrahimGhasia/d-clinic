@@ -110,7 +110,7 @@ export function Hero() {
 
 					<Button
 						component="a"
-						href="https://github.com/mantinedev/mantine"
+						href="https://github.com/IbrahimGhasia/d-clinic"
 						size="xl"
 						variant="default"
 						className={classes.control}
