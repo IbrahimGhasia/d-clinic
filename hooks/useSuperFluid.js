@@ -19,7 +19,7 @@ const useSuperFluid = () => {
 				chainId: 5,
 			});
 
-			// await wrapEther(provider, signer, totalTokens);
+			await wrapEther(provider, signer, totalTokens);
 
 			const EthXContract = await sf.loadSuperToken("ETHx");
 			const ETHx = EthXContract.address;
