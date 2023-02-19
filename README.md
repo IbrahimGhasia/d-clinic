@@ -1,6 +1,6 @@
 # d-Clinic
 
-<a href="https://www.youtube.com/watch?v=EHX3FIwhm6o&t=87s">Demo Video</a>
+<a href="https://www.youtube.com/watch?v=EHX3FIwhm6o">Demo Video</a>
 
 Our application is hosted on this below link:
 
