@@ -33,6 +33,7 @@ const PatientAppoinment = ({ patientId }: props) => {
 	} else {
 		appointments = (
 			<>
+				{/* @ts-expect-error Server Component */}
 				<AppointmentCard elements={appointmentData.appointmentCreateds} />
 			</>
 		);

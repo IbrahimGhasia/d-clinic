@@ -58,6 +58,7 @@ const DoctorAppointmentList = () => {
 	} else {
 		appointments = (
 			<>
+				{/* @ts-expect-error Server Component */}
 				<AppointmentCardDoctor elements={appointmentData.appointmentCreateds} />
 			</>
 		);

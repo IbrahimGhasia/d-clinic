@@ -67,124 +67,130 @@ const AppointmentCardDoctor = ({ elements }: TableProps) => {
 		prescription = prescription_details.prescriptionAddeds[0].prescriptions;
 	}
 
-	const rows = elements.map((element) => (
-		<tr key={element.doctorId}>
-			<td align="center">{element.doctorId} . </td>
-			<td align="left">{element.symptoms}</td>
-			<td align="center">{element.pastMedHistory}</td>
-			<td align="center">{element.appointmentDate}</td>
-			<td align="center">{element.appointmentTime}</td>
-			<td align="center">
-				<Modal
-					opened={opened}
-					transition={"fade"}
-					centered
-					onClose={() => setOpened(false)}
-					size={"lg"}
-					title={"Patient Details"}
-				>
-					<Group>
-						<IconUserCircle size={30} color={"green"} />
-						<Title order={2} color={"blue"}>
-							{patient_name}{" "}
-						</Title>
-					</Group>
+	const rows = (
+		<>
+			{elements.map((element) => (
+				<tr key={element.doctorId}>
+					<td align="center">{element.doctorId} . </td>
+					<td align="left">{element.symptoms}</td>
+					<td align="center">{element.pastMedHistory}</td>
+					<td align="center">{element.appointmentDate}</td>
+					<td align="center">{element.appointmentTime}</td>
+					<td align="center">
+						<Modal
+							opened={opened}
+							transition={"fade"}
+							centered
+							onClose={() => setOpened(false)}
+							size={"lg"}
+							title={"Patient Details"}
+						>
+							<Group>
+								<IconUserCircle size={30} color={"green"} />
+								<Title order={2} color={"blue"}>
+									{patient_name}{" "}
+								</Title>
+							</Group>
 
-					<Divider size="sm" my={10} variant={"dashed"} />
+							<Divider size="sm" my={10} variant={"dashed"} />
 
-					<Text fw={500}>
-						<span style={{ color: "red" }}>Wallet Address : </span>
-						{patient_walletAddress}
-					</Text>
-					<Text fw={500}>
-						<span style={{ color: "red" }}>Patient Home Address : </span>
-						{patient_perAddress}
-					</Text>
-					<Text fw={500}>
-						<span style={{ color: "red" }}>Gender : </span>
-						{gender}
-					</Text>
-					<Text fw={500}>
-						<span style={{ color: "red" }}>Age : </span>
-						{age}
-					</Text>
-					<Text fw={500}>
-						<span style={{ color: "red" }}>Date Of Birth : </span>
-						{dob}
-					</Text>
-					<Divider size="sm" my={10} variant={"dashed"} />
-					<Text fw={500}>
-						<span style={{ color: "red" }}>Prescription : </span>
-						{prescription.length === 0
-							? "No prescription given."
-							: prescription}
-					</Text>
+							<Text fw={500}>
+								<span style={{ color: "red" }}>Wallet Address : </span>
+								{patient_walletAddress}
+							</Text>
+							<Text fw={500}>
+								<span style={{ color: "red" }}>Patient Home Address : </span>
+								{patient_perAddress}
+							</Text>
+							<Text fw={500}>
+								<span style={{ color: "red" }}>Gender : </span>
+								{gender}
+							</Text>
+							<Text fw={500}>
+								<span style={{ color: "red" }}>Age : </span>
+								{age}
+							</Text>
+							<Text fw={500}>
+								<span style={{ color: "red" }}>Date Of Birth : </span>
+								{dob}
+							</Text>
+							<Divider size="sm" my={10} variant={"dashed"} />
+							<Text fw={500}>
+								<span style={{ color: "red" }}>Prescription : </span>
+								{prescription.length === 0
+									? "No prescription given."
+									: prescription}
+							</Text>
 
-					<Group position="apart" mt={30}>
-						<div>
-							<Link href="/meetRoom">
-								<Button
-									leftIcon={<IconBrandZoom size={18} />}
-									color="blue"
-									variant="outline"
-									size="md"
-								>
-									Create Meeting
-								</Button>
-							</Link>
-						</div>
-					</Group>
+							<Group position="apart" mt={30}>
+								<div>
+									<Link href="/meetRoom">
+										<Button
+											leftIcon={<IconBrandZoom size={18} />}
+											color="blue"
+											variant="outline"
+											size="md"
+										>
+											Create Meeting
+										</Button>
+									</Link>
+								</div>
+							</Group>
 
-					<div>
-						{!address ? null : (
-							<Chat
-								account={address} //user address
-								supportAddress={patient_walletAddress} //support address
-								apiKey="jVPMCRom1B.iDRMswdehJG7NpHDiECIHwYMMv6k2KzkPJscFIDyW8TtSnk4blYnGa8DIkfuacU0"
-								env="staging"
-							/>
-						)}
-					</div>
-				</Modal>
+							<div>
+								{!address ? null : (
+									<Chat
+										account={address} //user address
+										supportAddress={patient_walletAddress} //support address
+										apiKey="jVPMCRom1B.iDRMswdehJG7NpHDiECIHwYMMv6k2KzkPJscFIDyW8TtSnk4blYnGa8DIkfuacU0"
+										env="staging"
+									/>
+								)}
+							</div>
+						</Modal>
 
-				<UnstyledButton
-					onClick={() => {
-						setOpened(true);
-						setP_address(element.patientAddress);
-					}}
-				>
-					<IconInfoSquare />
-				</UnstyledButton>
-			</td>
-		</tr>
-	));
+						<UnstyledButton
+							onClick={() => {
+								setOpened(true);
+								setP_address(element.patientAddress);
+							}}
+						>
+							<IconInfoSquare />
+						</UnstyledButton>
+					</td>
+				</tr>
+			))}
+		</>
+	);
 
 	return (
-		<Table>
-			<thead>
-				<tr>
-					<th>
-						<Text align="center">Patient ID</Text>
-					</th>
-					<th>
-						<Text align="center">Symptoms</Text>
-					</th>
-					<th>
-						<Text align="center">Past Medical History</Text>
-					</th>
-					<th>
-						<Text align="center">Appointment Date</Text>
-					</th>
-					<th>
-						<Text align="center">Appointment Time</Text>
-					</th>
-					<th>
-						<Text align="center">Patient Info</Text>
-					</th>
-				</tr>
-			</thead>
-			<tbody>{rows}</tbody>
-		</Table>
+		<>
+			<Table>
+				<thead>
+					<tr>
+						<th>
+							<Text align="center">Patient ID</Text>
+						</th>
+						<th>
+							<Text align="center">Symptoms</Text>
+						</th>
+						<th>
+							<Text align="center">Past Medical History</Text>
+						</th>
+						<th>
+							<Text align="center">Appointment Date</Text>
+						</th>
+						<th>
+							<Text align="center">Appointment Time</Text>
+						</th>
+						<th>
+							<Text align="center">Patient Info</Text>
+						</th>
+					</tr>
+				</thead>
+				<tbody>{rows}</tbody>
+			</Table>
+		</>
 	);
 };
 export default AppointmentCardDoctor;
