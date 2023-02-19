@@ -63,10 +63,7 @@ const AppointmentCardDoctor = ({ elements }: TableProps) => {
 	}
 	let prescription = "";
 
-	if (
-		prescription_details.prescriptionAddeds.length === undefined &&
-		p_address.length !== 0
-	) {
+	if (prescription_details && p_address.length !== 0) {
 		// console.log(prescription_details);
 		prescription = prescription_details.prescriptionAddeds[0].prescriptions;
 	}
